@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"math/big"
+	"net/http"
 )
 
 func check_prime(x string) bool {
@@ -15,7 +15,8 @@ func check_prime(x string) bool {
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
 	// Проверяем метод запроса
-	if r.Method == http.MethodGet {
+	switch r.Method {
+	case http.MethodGet:
 		// Отображаем форму
 		fmt.Fprintf(w, `
         <!DOCTYPE html>
@@ -33,16 +34,15 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
        </body>
        </html>
         `)
-	} else if r.Method == http.MethodPost {
-		// Обрабатываем данные формы
+	case http.MethodPost:
 		err := r.ParseForm()
 		if err != nil {
 			fmt.Fprintf(w, "Error parsing form: %v", err)
 			return
 		}
-		
+
 		val := r.FormValue("int")
-		
+
 		if check_prime(val) {
 			fmt.Fprintf(w, "%v is prime", val)
 		} else {
@@ -52,10 +52,8 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// Регистрируем обработчики для разных маршрутов
 	http.HandleFunc("/", formHandler)
 
-	// Запускаем сервер
 	fmt.Println("Starting server at port 8080")
 	log.Print(http.ListenAndServe(":8080", nil))
 }
