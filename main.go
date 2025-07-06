@@ -14,15 +14,13 @@ func check_prime(x string) bool {
 }
 
 func formHandler(w http.ResponseWriter, r *http.Request) {
-	// Проверяем метод запроса
 	switch r.Method {
 	case http.MethodGet:
-		// Отображаем форму
 		fmt.Fprintf(w, `
         <!DOCTYPE html>
        <html>
        <head>
-       <title>Page Title</title>
+       <title>PRIMER</title>
        </head>
        <body>
 
@@ -43,11 +41,30 @@ func formHandler(w http.ResponseWriter, r *http.Request) {
 
 		val := r.FormValue("int")
 
+		var ans string
 		if check_prime(val) {
-			fmt.Fprintf(w, "%v is prime", val)
+			ans = val + " is prime"
 		} else {
-			fmt.Fprintf(w, "%v is not prime", val)
+			ans = val + " is not prime"
 		}
+
+		fmt.Fprintf(w, `
+        <!DOCTYPE html>
+       <html>
+       <head>
+       <title>PRIMER</title>
+       </head>
+       <body>
+
+       <p> `+ans+` </p>
+       <form method="GET">
+           <button type="retry">Retry</button>
+       </form>
+
+       </body>
+       </html>
+        `)
+
 	}
 }
 
